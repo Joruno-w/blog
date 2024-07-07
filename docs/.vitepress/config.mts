@@ -15,10 +15,10 @@ const blogTheme = getThemeConfig({
     ],
   },
   comment: {
-    repo: "ATQQ/sugar-blog",
-    repoId: "MDEwOlJlcG9zaXRvcnkyNDEyNDUyOTk",
+    repo: "Joruno-w/blog",
+    repoId: "R_kgDOMS_1eg",
     category: "Announcements",
-    categoryId: "DIC_kwDODmEcc84COVc6",
+    categoryId: "DIC_kwDOMS_1es4Cgn0r",
     inputPosition: "top",
   },
   popover: {
