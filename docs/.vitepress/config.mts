@@ -1,4 +1,3 @@
-import process from "node:process";
 import { getThemeConfig } from "@sugarat/theme/node";
 import type { Theme } from "@sugarat/theme";
 import { defineConfig } from "vitepress";
@@ -62,6 +61,16 @@ const blogTheme = getThemeConfig({
 });
 
 export default defineConfig({
+  locales: {
+    root: {
+      lang: "en",
+      label: "English",
+    },
+    zh: {
+      lang: "zh-cn",
+      label: "简体中文",
+    },
+  },
   extends: blogTheme,
   metaChunk: true,
   markdown: {
@@ -77,7 +86,7 @@ export default defineConfig({
     server: {
       port: 4000,
       host: "0.0.0.0",
-    },
+    }
   },
   vue: {
     template: {
@@ -97,8 +106,7 @@ export default defineConfig({
     lastUpdatedText: "上次更新于",
     logo: "https://avatars.githubusercontent.com/u/54349117?s=400&u=6874f6b910ff8161bf2812a89eb6854d9b8ec9d9&v=4",
     editLink: {
-      pattern:
-        "https://github.com/ATQQ/sugar-blog/tree/master/packages/blogpress/:path",
+      pattern: "https://github.com/Joruno-w/blog/tree/main/docs/:path",
       text: "去 GitHub 上编辑内容",
     },
     nav: [
@@ -107,12 +115,19 @@ export default defineConfig({
         link: "/aboutme",
       },
       {
-        text: "备战春秋",
+        text: "Electron",
+        activeMatch: "/electron/",
         items: [
-          { text: "心得总结", link: "/offer/experience/" },
-          { text: "校招考点汇总", link: "/offer/campus/" },
-          { text: "面经汇总", link: "/offer/sum-interview/" },
-          { text: "复习自查", link: "/offer/review/" },
+          {
+            text: "Electron入门",
+            items: [
+              { text: "基本介绍", link: "/electron/bootstrap/introduction" },
+              { text: "安全策略", link: "/electron/bootstrap/security-policy" },
+              { text: "进程&线程", link: "/electron/bootstrap/process-thread" },
+              // { text: "实战案例一：构建Markdown编辑器", link: "/electron/bootstrap/process-thread" },
+              // { text: "实战案例二：构建音乐播放器", link: "/electron/bootstrap/process-thread" },
+            ],
+          },
         ],
       },
     ],
