@@ -1,6 +1,7 @@
 import { getThemeConfig } from "@sugarat/theme/node";
 import type { Theme } from "@sugarat/theme";
 import { defineConfig } from "vitepress";
+import { pagefindPlugin } from "vitepress-plugin-pagefind";
 
 const blogTheme = getThemeConfig({
   themeColor: "el-blue",
@@ -61,6 +62,20 @@ const blogTheme = getThemeConfig({
 });
 
 export default defineConfig({
+  head: [
+    [
+      "script",
+      {},
+      `import('/pagefind/pagefind.js')
+        .then((module) => {
+          window.__pagefind__ = module
+          module.init()
+        })
+        .catch(() => {
+          // console.log('not load /pagefind/pagefind.js')
+        })`,
+    ],
+  ],
   locales: {
     root: {
       lang: "en",
@@ -86,7 +101,28 @@ export default defineConfig({
     server: {
       port: 4000,
       host: "0.0.0.0",
-    }
+    },
+    plugins: [
+      pagefindPlugin({
+        manual: true,
+        locales: {
+          root: {
+            btnPlaceholder: "Search",
+            placeholder: "Search Docs...",
+            emptyText: "No results",
+            heading: "Total: {{searchResult}} search results.",
+          },
+          zh: {
+            btnPlaceholder: "搜索",
+            placeholder: "搜索文档",
+            emptyText: "空空如也",
+            heading: "共: {{searchResult}} 条结果",
+            // 搜索结果不展示最后修改日期日期
+            showDate: false,
+          },
+        },
+      }),
+    ],
   },
   vue: {
     template: {

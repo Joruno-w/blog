@@ -15,11 +15,11 @@ dependencies:
   '@element-plus/icons-vue': registry.npmmirror.com/@element-plus/icons-vue/2.3.1_vue@3.4.26
   '@sugarat/theme': registry.npmmirror.com/@sugarat/theme/0.4.6_3bkolivkhszrhd7bsg64gw72dq
   element-plus: registry.npmmirror.com/element-plus/2.7.6_vue@3.4.26
+  pagefind: 1.1.0
   vitepress-plugin-pagefind: 0.4.5_3o5s3qfcnsmqurptkk34pzmwbe
   vue: registry.npmmirror.com/vue/3.4.26_typescript@5.5.3
 
 devDependencies:
-  pagefind: registry.npmmirror.com/pagefind/1.1.0
   sass: registry.npmmirror.com/sass/1.77.6
   typescript: registry.npmmirror.com/typescript/5.5.3
   vitepress: registry.npmmirror.com/vitepress/1.2.3_2aw3yzjaj22hibj5ueup5lri5e
@@ -262,6 +262,7 @@ packages:
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@pagefind/darwin-x64/1.1.0:
@@ -269,6 +270,7 @@ packages:
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@pagefind/linux-arm64/1.1.0:
@@ -276,6 +278,7 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@pagefind/linux-x64/1.1.0:
@@ -283,6 +286,7 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@pagefind/windows-x64/1.1.0:
@@ -290,6 +294,7 @@ packages:
     cpu: [x64]
     os: [win32]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@rollup/rollup-android-arm-eabi/4.18.0:
@@ -624,6 +629,17 @@ packages:
     hasBin: true
     dev: false
 
+  /pagefind/1.1.0:
+    resolution: {integrity: sha512-1nmj0/vfYcMxNEQj0YDRp6bTVv9hI7HLdPhK/vBBYlrnwjATndQvHyicj5Y7pUHrpCFZpFnLVQXIF829tpFmaw==}
+    hasBin: true
+    optionalDependencies:
+      '@pagefind/darwin-arm64': 1.1.0
+      '@pagefind/darwin-x64': 1.1.0
+      '@pagefind/linux-arm64': 1.1.0
+      '@pagefind/linux-x64': 1.1.0
+      '@pagefind/windows-x64': 1.1.0
+    dev: false
+
   /path-key/3.1.1:
     resolution: {integrity: sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==}
     engines: {node: '>=8'}
@@ -685,7 +701,7 @@ packages:
       '@sugarat/theme-shared': registry.npmmirror.com/@sugarat/theme-shared/0.0.2
       '@vueuse/core': registry.npmmirror.com/@vueuse/core/9.13.0_vue@3.4.31
       javascript-stringify: registry.npmmirror.com/javascript-stringify/2.1.0
-      pagefind: registry.npmmirror.com/pagefind/1.1.0
+      pagefind: 1.1.0
       vue: registry.npmmirror.com/vue/3.4.31_typescript@5.5.3
       vue-command-palette: registry.npmmirror.com/vue-command-palette/0.1.4
     transitivePeerDependencies:
@@ -701,7 +717,7 @@ packages:
       '@sugarat/theme-shared': 0.0.2
       '@vueuse/core': 9.13.0_vue@3.4.31
       javascript-stringify: 2.1.0
-      pagefind: registry.npmmirror.com/pagefind/1.1.0
+      pagefind: 1.1.0
       vue: 3.4.31_typescript@5.5.3
       vue-command-palette: 0.1.4
     transitivePeerDependencies:
@@ -3008,18 +3024,6 @@ packages:
     name: oh-my-live2d
     version: 0.19.3
     dev: false
-
-  registry.npmmirror.com/pagefind/1.1.0:
-    resolution: {integrity: sha512-1nmj0/vfYcMxNEQj0YDRp6bTVv9hI7HLdPhK/vBBYlrnwjATndQvHyicj5Y7pUHrpCFZpFnLVQXIF829tpFmaw==, registry: https://rcnpm.zhuanspirit.com/, tarball: https://registry.npmmirror.com/pagefind/-/pagefind-1.1.0.tgz}
-    name: pagefind
-    version: 1.1.0
-    hasBin: true
-    optionalDependencies:
-      '@pagefind/darwin-arm64': 1.1.0
-      '@pagefind/darwin-x64': 1.1.0
-      '@pagefind/linux-arm64': 1.1.0
-      '@pagefind/linux-x64': 1.1.0
-      '@pagefind/windows-x64': 1.1.0
 
   registry.npmmirror.com/path-key/3.1.1:
     resolution: {integrity: sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==, registry: https://rcnpm.zhuanspirit.com/, tarball: https://registry.npmmirror.com/path-key/-/path-key-3.1.1.tgz}
