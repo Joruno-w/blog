@@ -78,7 +78,6 @@ export const UI: Ui = {
     left: [],
     right: [
       'internalNavs',
-      'hr',
       'socialLinks',
       'hr',
       'searchButton',

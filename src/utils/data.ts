@@ -38,24 +38,42 @@ export function getSortedPosts(
   )
 }
 /**
- * Groups posts by their category and sorts them by publication date within each category.
+ * Extracts the number from the beginning of a filename (e.g., "AI编码提效/1.基本介绍" -> 1)
+ */
+function extractFileNumber(filepath: string): number {
+  // Extract just the filename from the full path
+  const filename = filepath.split('/').pop() || ''
+  const match = filename.match(/^(\d+)/)
+  return match ? parseInt(match[1], 10) : Infinity
+}
+
+/**
+ * Groups posts by their category and sorts them by the number in filename within each category.
  */
 export function getPostsByCategory(
   posts: CollectionEntryList<'blog' | 'changelog'>
 ) {
-  const sortedPosts = getSortedPosts(posts)
   const categoriesMap = new Map<
     string,
     CollectionEntryList<'blog' | 'changelog'>
   >()
 
   // Group posts by category
-  sortedPosts.forEach((post) => {
+  posts.forEach((post) => {
     const category = post.data.category || '随笔'
     if (!categoriesMap.has(category)) {
       categoriesMap.set(category, [])
     }
     categoriesMap.get(category)!.push(post)
+  })
+
+  // Sort posts within each category by filename number
+  categoriesMap.forEach((postsInCategory) => {
+    postsInCategory.sort((a, b) => {
+      const numA = extractFileNumber(a.id)
+      const numB = extractFileNumber(b.id)
+      return numA - numB
+    })
   })
 
   // Convert to array and sort categories
