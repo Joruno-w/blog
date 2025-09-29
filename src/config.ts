@@ -56,23 +56,23 @@ export const UI: Ui = {
   ],
   socialLinks: [
     {
-      link: 'https://github.com/lin-stephanie/astro-antfustyle-theme',
-      title: 'AntfuStyle on Github',
+      link: 'https://github.com/Joruno-w',
+      title: 'GitHub Profile',
       displayMode: 'alwaysIcon',
       icon: 'i-uil-github-alt',
     },
-    {
-      link: 'https://x.com/astrodotbuild',
-      title: 'Astro on Twitter',
-      displayMode: 'alwaysIcon',
-      icon: 'i-ri-twitter-x-fill',
-    },
-    {
-      link: 'https://bsky.app/profile/astro.build',
-      title: 'Astro on Bluesky',
-      displayMode: 'alwaysIcon',
-      icon: 'i-meteor-icons-bluesky',
-    },
+    // {
+    //   link: 'https://x.com/astrodotbuild',
+    //   title: 'Astro on Twitter',
+    //   displayMode: 'alwaysIcon',
+    //   icon: 'i-ri-twitter-x-fill',
+    // },
+    // {
+    //   link: 'https://bsky.app/profile/astro.build',
+    //   title: 'Astro on Bluesky',
+    //   displayMode: 'alwaysIcon',
+    //   icon: 'i-meteor-icons-bluesky',
+    // },
   ],
   navBarLayout: {
     left: [],
@@ -147,8 +147,8 @@ export const FEATURES: Features = {
   share: [
     true,
     {
-      twitter: [true, '@ste7lin'],
-      bluesky: [true, '@ste7lin.bsky.social'],
+      twitter: false,
+      bluesky: false,
       mastodon: false,
       facebook: false,
       pinterest: false,
