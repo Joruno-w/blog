@@ -1,83 +1,20 @@
-Glad you made it here! This is a flexible and feature-rich :link[Astro 5]{id=withastro/astro} theme for developers and creators, inspired by the minimalist style of :link[antfu.me]{id=https://antfu.me/ img=https://github.com/antfu.png .rounded}. The design has been refined and its functionality expanded for greater flexibility.
+## 关于我
 
-This live demo will guide you through setup and customization, offering helpful insights along the way. Enjoy exploring all the features this theme provides! ✨
+嗨👋，我是乔鲁诺。
 
-**Optimized Infrastructure**
+写代码这件事对我来说，就像是在玩一个永远通不完关的游戏 —— 每天都有新的挑战，每个 bug 都是一个小 boss，解决掉的那一刻特别有成就感。
 
-- Zero UI Framework
-- [SEO-Friendly](./blog/faqs-and-known-issues/#about-seo-and-accessibility)
-- [Auto-Generated RSS Feed](./blog/faqs-and-known-issues/#rss-subscription-scope)
-- [Dynamic OG Image Generation](./blog/about-open-graph-images/)
-- [Subpath Deployment](./blog/basic-configuration/#configuring-site) Support
-- Optimized and Responsive Images
-- VS Code Snippets for Fast Coding
-- [Well-Structured Project](./blog/project-structure/)
-- High [Lighthouse Performance](./blog/faqs-and-known-issues/#lighthouse-scores)
+这些年来，我折腾过各种项目：电商网站、管理后台、项目基建...，有时候为了一个动画效果能调半天，有时候为了几毫秒的性能优化能熬到深夜。朋友们说我有点"强迫症"，但我觉得这是对用户体验的执着。
 
-**Content Management**
+我喜欢和同事分享一些有趣的技术方案，也经常在技术群里"水群"讨论新框架。毕竟，一个人写代码容易钻牛角尖，大家一起聊聊总能碰撞出新的火花。
 
-- Markdown & MDX Support
-- [Math Equations Rendering](./blog/faqs-and-known-issues/#choosing-a-math-rendering-engine)
-- [Callouts (Alerts/Admonitions)](./blog/markdown-mdx-extended-features/#callouts-alerts--admonitions)
-- [Code Syntax Highlighting & Annotations](./blog/markdown-mdx-extended-features/#fully-featured-code-blocks)
-- Ready-To-Use [Remark Directives](./blog/markdown-mdx-extended-features/#image-caption--link-image)
-- Customizable Layouts, Views, and Navigation
-- [Configurable Animated Backgrounds](./blog/faqs-and-known-issues/#page-backgrounds) (Take a look around!)
-- [Showcase Your GitHub Releases and PRs](./blog/customizing-github-activity-pages)
-- [Highlight Your Creative Work or Curated Posts](./blog/recreating-current-pages/#highlights)
-- [Share Your Short Notes or Quick Thoughts](./blog/recreating-current-pages/#shorts)
-- [Create Your Personal Gallery](./blog/recreating-current-pages/#photos)
+开这个博客主要是想记录一些开发过程中的思考和踩过的坑，说不定能帮到遇到类似问题的朋友。当然，也欢迎大家来"拍砖"指正。
 
-**User Experience**
+## 找到我
 
-- Responsive Layout
-- Full-Platform TOC Support
-- Light & Dark Modes Toggle
-- Smooth View Transitions
-- Loading Progress Indicator
-- [Search Functionality](./blog/faqs-and-known-issues/#search-functionality)
-- [Image Zoom Preview](./blog/faqs-and-known-issues/#image-zoom)
-- Social Media Sharing
-- [Integrated Giscus Comments](./blog/advanced-configuration/#configure-giscus-comments)
-- [Accessibility Enhancements](./blog/faqs-and-known-issues/#about-seo-and-accessibility)
-- Keyboard-Friendly
+如果你也是个代码爱好者，或者有什么有趣的项目想聊聊，随时欢迎来找我：
 
-> [More features](https://github.com/users/lin-stephanie/projects/4) are continuously being added! 🚀
+- 邮箱：wsl1710642275@gmail.com
+- GitHub：[https://github.com/Joruno-w](https://github.com/Joruno-w)
 
----
-
-<p>
-  Visit the theme's
-  <a
-    class="inline-block ml-1.5 op-75"
-    href="https://github.com/lin-stephanie/astro-antfustyle-theme"
-  >
-  <span i-simple-icons-github></span> GitHub repo</a>
-</p>
-
-<p>
-  <span class="inline-block mr-1.5 mb-2">Find me on</span>
-  <span class="inline-flex flex-wrap gap-2 op-75">
-    <a href="https://github.com/lin-stephanie/astro-antfustyle-theme">
-      <span i-simple-icons-github></span> GitHub</a>
-    <a href="https://github.com/lin-stephanie/astro-antfustyle-theme">
-      <span i-ri-twitter-x-fill></span> Twitter</a>
-    <a href="https://github.com/lin-stephanie/astro-antfustyle-theme">
-      <span i-simple-icons-instagram></span> Instagram</a>
-    <a href="https://github.com/lin-stephanie/astro-antfustyle-theme">
-      <span i-simple-icons-mastodon></span> Mastodon</a>
-    <a href="https://github.com/lin-stephanie/astro-antfustyle-theme">
-      <span i-simple-icons-youtube></span> YouTube</a>
-  </span>
-</p>
-
----
-
-If you find this theme helpful, consider supporting the project maintainer or the style designer. Your support means more than you know. Thank you! ❤️
-
-<div class="flex flex-wrap gap-4">
-  <a class="btn-rose" href="https://github.com/sponsors/lin-stephanie">
-    <span class="i-ph-heart-duotone"></span> Support Stephanie Lin (Maintainer)</a>
-  <a class="btn-yellow" href="https://github.com/sponsors/antfu">
-    <span class="i-ph-lightning-duotone"></span> Support Anthony Fu (Designer)</a>
-</div>
+期待和你一起在代码的世界里探索更多可能！
