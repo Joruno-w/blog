@@ -37,6 +37,47 @@ export function getSortedPosts(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
   )
 }
+/**
+ * Groups posts by their category and sorts them by publication date within each category.
+ */
+export function getPostsByCategory(
+  posts: CollectionEntryList<'blog' | 'changelog'>
+) {
+  const sortedPosts = getSortedPosts(posts)
+  const categoriesMap = new Map<
+    string,
+    CollectionEntryList<'blog' | 'changelog'>
+  >()
+
+  // Group posts by category
+  sortedPosts.forEach((post) => {
+    const category = post.data.category || '随笔'
+    if (!categoriesMap.has(category)) {
+      categoriesMap.set(category, [])
+    }
+    categoriesMap.get(category)!.push(post)
+  })
+
+  // Convert to array and sort categories
+  return Array.from(categoriesMap.entries()).sort(([a], [b]) => {
+    // Put "随笔" category last, sort others alphabetically
+    if (a === '随笔' && b !== '随笔') return 1
+    if (b === '随笔' && a !== '随笔') return -1
+    return a.localeCompare(b, 'zh-CN')
+  })
+}
+/**
+ * Checks if two posts have the same category.
+ */
+export function isSameCategory(
+  currentPost: CollectionEntry<'blog' | 'changelog'> | undefined,
+  previousPost: CollectionEntry<'blog' | 'changelog'> | undefined
+): boolean {
+  if (!currentPost || !previousPost) return false
+  const currentCategory = currentPost.data.category || '随笔'
+  const previousCategory = previousPost.data.category || '随笔'
+  return currentCategory === previousCategory
+}
 
 /**
  * Matches the input string against the rules in `UI.githubView.mainLogoOverrides`

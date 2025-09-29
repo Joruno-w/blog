@@ -1,15 +1,14 @@
 import type { Site, Ui, Features } from './types'
 
 export const SITE: Site = {
-  website: 'https://astro-antfustyle-theme.vercel.app/',
+  website: 'https://wangshengliang.cn/',
   base: '/',
-  title: 'Astro AntfuStyle Theme',
-  description:
-    'A customizable, feature-rich Astro theme for blog and portfolio creation',
-  author: 'Stephanie Lin',
-  lang: 'en',
-  ogLocale: 'en_US',
-  imageDomains: ['cdn.bsky.app', 'images.unsplash.com'],
+  title: 'Joruno Jobaāna',
+  description: "Joruno Jobaāna's blog",
+  author: 'Joruno Jobaāna',
+  lang: 'zh-Hans',
+  ogLocale: 'zh_CN',
+  imageDomains: ['cdn.jsdelivr.net', '*.unsplash.com'],
 }
 
 export const UI: Ui = {
@@ -127,7 +126,7 @@ export const UI: Ui = {
  *  - Set to `[true, {...}]` to enable and configure the feature.
  */
 export const FEATURES: Features = {
-  slideEnterAnim: [true, { enterStep: 60 }],
+  slideEnterAnim: [true, { enterStep: 40 }],
   ogImage: [
     true,
     {
@@ -162,16 +161,16 @@ export const FEATURES: Features = {
   giscus: [
     true,
     {
-      'data-repo': 'lin-stephanie/astro-antfustyle-theme',
-      'data-repo-id': 'R_kgDOLylKbA',
-      'data-category': 'Giscus',
-      'data-category-id': 'DIC_kwDOLylKbM4Cpugn',
-      'data-mapping': 'title',
+      'data-repo': 'Joruno-w/blog',
+      'data-repo-id': 'R_kgDOP4yOiQ',
+      'data-category': 'Announcements',
+      'data-category-id': 'DIC_kwDOP4yOic4CwBgk',
+      'data-mapping': 'pathname',
       'data-strict': '0',
       'data-reactions-enabled': '1',
       'data-emit-metadata': '0',
       'data-input-position': 'bottom',
-      'data-lang': 'en',
+      'data-lang': 'zh-CN',
     },
   ],
 }

@@ -8,7 +8,7 @@ import Warning from '~/components/base/Warning.astro'
 
 import { FEATURES } from '~/config'
 import { isSameYear, getYear } from '~/utils/datetime'
-import { getFilteredPosts, getSortedPosts } from '~/utils/data'
+import { getFilteredPosts, getPostsByCategory } from '~/utils/data'
 
 import type { CollectionEntry, CollectionKey } from 'astro:content'
 import type { StreamSchema } from '~/content/schema'
@@ -27,24 +27,21 @@ const WARNING = `The '${collectionType}' collection type is not built-in.
 /* Toc */
 const { toc } = FEATURES
 const tocEnabled = Array.isArray(toc) && toc[0] && pageToc
+let categories: string[] = []
 let years: string[] = []
 
 /* Posts */
+let categorizedBlogItems: [string, CollectionEntry<'blog' | 'changelog'>[]][] =
+  []
 let sortedBlogItems: CollectionEntry<'blog' | 'changelog'>[] = []
 if (collectionType === 'blog' || collectionType === 'changelog') {
   const blogItems = await getFilteredPosts(collectionType)
-  sortedBlogItems = getSortedPosts(blogItems)
+  categorizedBlogItems = getPostsByCategory(blogItems)
+  // Flatten for backward compatibility
+  sortedBlogItems = categorizedBlogItems.flatMap(([_, posts]) => posts)
 
   if (tocEnabled) {
-    const yearsSet = new Set<number>()
-    sortedBlogItems.forEach((item) => {
-      const year = getYear(item.data.pubDate)
-      yearsSet.add(year)
-    })
-
-    years = Array.from(yearsSet)
-      .sort((a, b) => b - a)
-      .map((year) => year.toString())
+    categories = categorizedBlogItems.map(([category]) => category)
   }
 }
 
@@ -96,47 +93,61 @@ if (collectionType === 'feeds') {
 }
 ---
 
-{tocEnabled && <Toc anchors={years} />}
-
+{
+  tocEnabled && (
+    <Toc
+      anchors={
+        collectionType === 'blog' || collectionType === 'changelog'
+          ? categories
+          : years
+      }
+    />
+  )
+}
 {
   (collectionType === 'blog' || collectionType === 'changelog') && (
     <div aria-label="Post list">
-      {sortedBlogItems.length === 0 ? (
+      {categorizedBlogItems.length === 0 ? (
         <div class="py-2 op-50">nothing here yet</div>
       ) : (
-        sortedBlogItems.map(async (item, idx) => {
-          const { data, id } = item
-          const { remarkPluginFrontmatter } = await render(item)
-          const minutesRead =
-            data.minutesRead || remarkPluginFrontmatter.minutesRead
+        categorizedBlogItems.map(([category, posts]) =>
+          posts.map(async (item, idx) => {
+            const { data, id } = item
+            const { remarkPluginFrontmatter } = await render(item)
+            const minutesRead =
+              data.minutesRead || remarkPluginFrontmatter.minutesRead
 
-          return (
-            <>
-              {!isSameYear(
-                data.pubDate,
-                sortedBlogItems[idx - 1]?.data.pubDate
-              ) && (
-                <Categorizer
-                  {idx}
-                  needId={tocEnabled}
-                  text={getYear(data.pubDate).toString()}
+            // Find global index for proper categorizer display
+            const globalIdx = sortedBlogItems.findIndex(
+              (post) => post.id === id
+            )
+            const isFirstInCategory = idx === 0
+
+            return (
+              <>
+                {isFirstInCategory && (
+                  <Categorizer
+                    idx={globalIdx}
+                    needId={tocEnabled}
+                    text={category}
+                  />
+                )}
+                <ListItem
+                  idx={globalIdx}
+                  {collectionType}
+                  redirect={data.redirect}
+                  postSlug={id}
+                  title={data.title}
+                  video={data.video}
+                  radio={data.radio}
+                  date={data.pubDate}
+                  {minutesRead}
+                  platform={data.platform}
                 />
-              )}
-              <ListItem
-                {idx}
-                {collectionType}
-                redirect={data.redirect}
-                postSlug={id}
-                title={data.title}
-                video={data.video}
-                radio={data.radio}
-                date={data.pubDate}
-                {minutesRead}
-                platform={data.platform}
-              />
-            </>
-          )
-        })
+              </>
+            )
+          })
+        )
       )}
     </div>
   )

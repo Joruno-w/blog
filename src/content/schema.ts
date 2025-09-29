@@ -128,6 +128,12 @@ export const postSchema = z.object({
     .describe(
       'Marks the post as a draft. If `true`, it is only visible in development and excluded from production builds.'
     ),
+  category: z
+    .string()
+    .default('随笔')
+    .describe(
+      'Specifies the category of the post. If not provided, defaults to "随笔".'
+    ),
 })
 
 export type PostSchema = z.infer<typeof postSchema>

@@ -81,8 +81,11 @@
     "pre-commit": "npx lint-staged"
   },
   "lint-staged": {
-    "*": [
-      "eslint"
+    "*.{js,mjs,cjs,ts,tsx,astro}": [
+      "eslint --fix"
+    ],
+    "*.{js,mjs,cjs,ts,tsx,astro,json,md,mdx}": [
+      "prettier --write"
     ]
   },
   "pnpm": {
