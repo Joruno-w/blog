@@ -291,5 +291,3 @@ parentPort.on('message', ({ id, op, buf }) => {
 - 并行（Parallelism）：多线程/多核真正同时运行；适合 CPU 密集（图像处理、加解密、路径规划、压缩等）。JS 中实现并行，浏览器环境用 Web Workers；Node.js 环境用 Worker Threads。并行是请来更多人同时干。
 
 两者不冲突，绝大多数前端/服务端场景用并发异步就够了，只有当计算真把 CPU 吃满、拖慢交互或吞吐时，再让 Worker 家族登场。
-
----
