@@ -250,11 +250,4 @@ ogImage: true`
   }
 }
 
-const sourcePath = path.resolve(
-  import.meta.dirname,
-  '../content/blog/LLM基础知识'
-)
-const targetPath = path.resolve(import.meta.dirname, '../content/blog/LLM')
-extractMdFilesFlat(sourcePath, targetPath, true, 'LLM')
-
 export { renameFilesRecursively, extractMdFilesFlat }
