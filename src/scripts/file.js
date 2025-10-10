@@ -60,6 +60,201 @@ function renameFilesRecursively(dirPath, searchPattern, replaceWith) {
 // 使用示例
 // renameFilesRecursively('./test-folder', /\s+/g, '-')  // 将空格替换为横线
 // renameFilesRecursively('./test-folder', 'old', 'new')  // 将 'old' 替换为 'new'
+/**
+ * 检查文件名是否在黑名单中
+ * @param {string} fileName - 文件名
+ * @param {Array<string>} blacklist - 黑名单数组
+ * @returns {boolean} 是否在黑名单中
+ */
+function isInBlacklist(fileName, blacklist) {
+  return blacklist.some((pattern) => {
+    try {
+      // 尝试作为正则表达式处理
+      if (pattern.startsWith('/') && pattern.endsWith('/')) {
+        const regexPattern = pattern.slice(1, -1)
+        const regex = new RegExp(regexPattern, 'i')
+        return regex.test(fileName)
+      }
+      // 处理通配符模式
+      const regexPattern = pattern.replace(/\*/g, '.*').replace(/\?/g, '.')
+      const regex = new RegExp(`^${regexPattern}$`, 'i')
+      return regex.test(fileName)
+    } catch (error) {
+      console.warn(`黑名单模式无效: ${pattern}`, error.message)
+      return false
+    }
+  })
+}
+
+/**
+ * 创建 frontmatter
+ * @param {string} title - 标题
+ * @param {string} pubDate - 发布日期
+ * @param {string} category - 分类
+ * @returns {string} frontmatter 字符串
+ */
+function createFrontmatter(title, pubDate, category) {
+  let frontmatter = `---
+title: ${title}
+description: ${title}
+pubDate: ${pubDate}
+toc: true
+ogImage: true`
+
+  if (category) {
+    frontmatter += `\ncategory: ${category}`
+  }
+
+  frontmatter += '\n---'
+  return frontmatter
+}
+
+/**
+ * 处理文件内容，去除重复的一级标题
+ * @param {string} content - 原始内容
+ * @param {string} fileName - 文件名（不含扩展名）
+ * @returns {string} 处理后的内容
+ */
+function processContentTitle(content, fileName) {
+  const firstH1Match = content.match(/^#\s+(.+)$/m)
+  if (firstH1Match && firstH1Match[1].trim() === fileName) {
+    console.log(`已删除重复的一级标题: ${firstH1Match[1]}`)
+    return content.replace(/^#\s+.+$/m, '').trim()
+  }
+  return content
+}
+
+/**
+ * 更新或创建 frontmatter
+ * @param {string} content - 文件内容
+ * @param {string} title - 标题
+ * @param {string} today - 今天日期
+ * @param {string} category - 分类
+ * @returns {string} 更新后的内容
+ */
+function updateFrontmatter(content, title, today, category) {
+  const hasFrontmatter = content.startsWith('---')
+
+  if (hasFrontmatter) {
+    const frontmatterEndIndex = content.indexOf('---', 3)
+    if (frontmatterEndIndex !== -1) {
+      const existingFrontmatter = content.substring(0, frontmatterEndIndex + 3)
+      const bodyContent = content.substring(frontmatterEndIndex + 3)
+
+      // 更新 frontmatter 中的字段
+      let updatedFrontmatter = existingFrontmatter
+        .replace(/title:\s*.*$/m, `title: ${title}`)
+        .replace(/description:\s*.*$/m, `description: ${title}`)
+        .replace(/pubDate:\s*.*$/m, `pubDate: ${today}`)
+
+      // 如果没有找到这些字段，添加它们
+      if (!updatedFrontmatter.includes('title:')) {
+        updatedFrontmatter = updatedFrontmatter.replace(
+          '---',
+          `---\ntitle: ${title}`
+        )
+      }
+      if (!updatedFrontmatter.includes('description:')) {
+        updatedFrontmatter = updatedFrontmatter.replace(
+          '---',
+          `---\ndescription: ${title}`
+        )
+      }
+      if (!updatedFrontmatter.includes('pubDate:')) {
+        updatedFrontmatter = updatedFrontmatter.replace(
+          '---',
+          `---\npubDate: ${today}`
+        )
+      }
+
+      return updatedFrontmatter + bodyContent
+    } else {
+      // frontmatter 格式不正确，重新创建
+      return createFrontmatter(title, today, category) + '\n' + content
+    }
+  } else {
+    // 没有 frontmatter，添加新的
+    return createFrontmatter(title, today, category) + '\n' + content
+  }
+}
+
+/**
+ * 处理单个 MD 文件
+ * @param {string} filePath - 文件路径
+ * @param {string} fileName - 文件名
+ * @param {string} targetPath - 目标路径
+ * @param {number} sequenceNumber - 序号
+ * @param {string} today - 今天日期
+ * @param {string} category - 分类
+ * @returns {boolean} 是否处理成功
+ */
+function processMdFile(
+  filePath,
+  fileName,
+  targetPath,
+  sequenceNumber,
+  today,
+  category
+) {
+  try {
+    // 读取原文件内容
+    const originalContent = fs.readFileSync(filePath, 'utf8')
+
+    // 去除与文件名相同的第一个一级标题
+    const processedContent = processContentTitle(originalContent, fileName)
+
+    // 更新或创建 frontmatter
+    const newContent = updateFrontmatter(
+      processedContent,
+      fileName,
+      today,
+      category
+    )
+
+    // 生成目标文件路径
+    const targetFileName = `${sequenceNumber}-${fileName}.mdx`
+    const targetFilePath = path.join(targetPath, targetFileName)
+
+    // 写入新文件
+    fs.writeFileSync(targetFilePath, newContent, 'utf8')
+    console.log(`已转换: ${filePath} -> ${targetFilePath}`)
+    return true
+  } catch (error) {
+    console.error(`处理文件失败: ${fileName}`, error.message)
+    return false
+  }
+}
+
+/**
+ * 处理重复文件名
+ * @param {string} fileName - 文件名
+ * @param {Map} processedFiles - 已处理文件映射
+ * @param {string} targetPath - 目标路径
+ * @param {number} currentSequenceNumber - 当前序号
+ * @returns {Object} 包含是否为重复文件和计数变化的对象
+ */
+function handleDuplicateFile(
+  fileName,
+  processedFiles,
+  targetPath,
+  currentSequenceNumber
+) {
+  if (processedFiles.has(fileName)) {
+    const oldSequenceNumber = processedFiles.get(fileName)
+    const oldFileName = `${oldSequenceNumber}-${fileName}.mdx`
+    const oldFilePath = path.join(targetPath, oldFileName)
+
+    if (fs.existsSync(oldFilePath)) {
+      fs.unlinkSync(oldFilePath)
+      console.log(`删除重复文件: ${oldFileName}`)
+      return { isDuplicate: true, countChange: -1 }
+    }
+    return { isDuplicate: true, countChange: 0 }
+  }
+
+  processedFiles.set(fileName, currentSequenceNumber)
+  return { isDuplicate: false, countChange: 0 }
+}
 
 // extractMdFilesFlat('./source-folder', './extracted-md-files')  // 提取 .md 文件并转换为 .mdx
 // extractMdFilesFlat('./docs', './all-docs', true, 'AI编码提效', ['README*', 'LICENSE*', '/^temp/'])  // 提取并覆盖同名文件，指定分类和黑名单
@@ -99,44 +294,6 @@ function extractMdFilesFlat(
     // 获取今天的日期（YYYY-MM-DD 格式）
     const today = new Date().toISOString().split('T')[0]
 
-    // 黑名单匹配函数
-    function isInBlacklist(fileName) {
-      return blacklist.some((pattern) => {
-        try {
-          // 尝试作为正则表达式处理
-          if (pattern.startsWith('/') && pattern.endsWith('/')) {
-            const regexPattern = pattern.slice(1, -1)
-            const regex = new RegExp(regexPattern, 'i')
-            return regex.test(fileName)
-          }
-          // 处理通配符模式
-          const regexPattern = pattern.replace(/\*/g, '.*').replace(/\?/g, '.')
-          const regex = new RegExp(`^${regexPattern}$`, 'i')
-          return regex.test(fileName)
-        } catch (error) {
-          console.warn(`黑名单模式无效: ${pattern}`, error.message)
-          return false
-        }
-      })
-    }
-
-    // 创建 frontmatter 的辅助函数
-    function createFrontmatter(title, pubDate, category) {
-      let frontmatter = `---
-title: ${title}
-description: ${title}
-pubDate: ${pubDate}
-toc: true
-ogImage: true`
-
-      if (category) {
-        frontmatter += `\ncategory: ${category}`
-      }
-
-      frontmatter += '\n---'
-      return frontmatter
-    }
-
     function traverseDirectory(currentPath) {
       // 检查当前目录是否包含 package.json 文件
       const packageJsonPath = path.join(currentPath, 'package.json')
@@ -163,31 +320,31 @@ ogImage: true`
               .parse(item)
               .name.replace(/\d+(\.|-)?\s*/g, '')
 
-            if (isInBlacklist(nameWithoutExt) || isInBlacklist(item)) {
+            if (
+              isInBlacklist(nameWithoutExt, blacklist) ||
+              isInBlacklist(item, blacklist)
+            ) {
               console.log(`跳过黑名单文件: ${item}`)
               return
             }
             // 处理 .md 文件
             console.log(`发现 .md 文件: ${item}`)
-
             // 检查是否已经处理过相同的文件名
             let currentSequenceNumber = sequenceNumber
-            if (processedFiles.has(nameWithoutExt)) {
-              // 如果已存在相同文件名，使用之前的序号并删除旧文件
-              currentSequenceNumber = processedFiles.get(nameWithoutExt)
-              const oldFileName = `${currentSequenceNumber}-${nameWithoutExt}.mdx`
-              const oldFilePath = path.join(targetPath, oldFileName)
+            const duplicateResult = handleDuplicateFile(
+              nameWithoutExt,
+              processedFiles,
+              targetPath,
+              currentSequenceNumber
+            )
 
-              if (fs.existsSync(oldFilePath)) {
-                fs.unlinkSync(oldFilePath)
-                console.log(`删除重复文件: ${oldFileName}`)
-                totalCopied-- // 减少计数，因为删除了一个文件
-              }
+            if (duplicateResult.isDuplicate) {
+              currentSequenceNumber = processedFiles.get(nameWithoutExt)
             } else {
-              // 新文件名，记录映射关系
-              processedFiles.set(nameWithoutExt, currentSequenceNumber)
               sequenceNumber++
             }
+
+            totalCopied += duplicateResult.countChange
 
             const targetFileName = `${currentSequenceNumber}-${nameWithoutExt}.mdx`
             const targetFilePath = path.join(targetPath, targetFileName)
@@ -206,88 +363,18 @@ ogImage: true`
               console.warn(`文件已存在，跳过: ${targetFileName}`)
               return
             }
-
-            try {
-              // 读取原文件内容
-              const originalContent = fs.readFileSync(fullPath, 'utf8')
-
-              // 去除与文件名相同的第一个一级标题
-              let processedContent = originalContent
-              const firstH1Match = originalContent.match(/^#\s+(.+)$/m)
-              if (firstH1Match && firstH1Match[1].trim() === nameWithoutExt) {
-                // 找到匹配的一级标题，将其删除
-                processedContent = originalContent
-                  .replace(/^#\s+.+$/m, '')
-                  .trim()
-                console.log(`已删除重复的一级标题: ${firstH1Match[1]}`)
-              }
-
-              // 检查是否已经有 frontmatter
-              const hasFrontmatter = processedContent.startsWith('---')
-
-              let newContent
-              if (hasFrontmatter) {
-                // 如果已有 frontmatter，替换或更新
-                const frontmatterEndIndex = processedContent.indexOf('---', 3)
-                if (frontmatterEndIndex !== -1) {
-                  const existingFrontmatter = processedContent.substring(
-                    0,
-                    frontmatterEndIndex + 3
-                  )
-                  const bodyContent = processedContent.substring(
-                    frontmatterEndIndex + 3
-                  )
-
-                  // 更新 frontmatter 中的字段
-                  let updatedFrontmatter = existingFrontmatter
-                    .replace(/title:\s*.*$/m, `title: ${nameWithoutExt}`)
-                    .replace(
-                      /description:\s*.*$/m,
-                      `description: ${nameWithoutExt}`
-                    )
-                    .replace(/pubDate:\s*.*$/m, `pubDate: ${today}`)
-
-                  // 如果没有找到这些字段，添加它们
-                  if (!updatedFrontmatter.includes('title:')) {
-                    updatedFrontmatter = updatedFrontmatter.replace(
-                      '---',
-                      `---\ntitle: ${nameWithoutExt}`
-                    )
-                  }
-                  if (!updatedFrontmatter.includes('description:')) {
-                    updatedFrontmatter = updatedFrontmatter.replace(
-                      '---',
-                      `---\ndescription: ${nameWithoutExt}`
-                    )
-                  }
-                  if (!updatedFrontmatter.includes('pubDate:')) {
-                    updatedFrontmatter = updatedFrontmatter.replace(
-                      '---',
-                      `---\npubDate: ${today}`
-                    )
-                  }
-
-                  newContent = updatedFrontmatter + bodyContent
-                } else {
-                  // frontmatter 格式不正确，重新创建
-                  newContent =
-                    createFrontmatter(nameWithoutExt, today, category) +
-                    '\n' +
-                    processedContent
-                }
-              } else {
-                // 没有 frontmatter，添加新的
-                newContent =
-                  createFrontmatter(nameWithoutExt, today, category) +
-                  '\n' +
-                  processedContent
-              }
-              // 写入新文件
-              fs.writeFileSync(targetFilePath, newContent, 'utf8')
+            // 处理文件
+            if (
+              processMdFile(
+                fullPath,
+                nameWithoutExt,
+                targetPath,
+                currentSequenceNumber,
+                today,
+                category
+              )
+            ) {
               totalCopied++
-              console.log(`已转换: ${fullPath} -> ${targetFilePath}`)
-            } catch (error) {
-              console.error(`处理文件失败: ${item}`, error.message)
             }
           }
         }
