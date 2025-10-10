@@ -61,21 +61,23 @@ function renameFilesRecursively(dirPath, searchPattern, replaceWith) {
 // renameFilesRecursively('./test-folder', /\s+/g, '-')  // 将空格替换为横线
 // renameFilesRecursively('./test-folder', 'old', 'new')  // 将 'old' 替换为 'new'
 
-// extractMdFilesFlat('./source-folder', './extracted-md-files')  // 提取文件名包含中文的 .md 文件并转换为 .mdx
-// extractMdFilesFlat('./docs', './all-docs', true, 'AI编码提效')  // 提取并覆盖同名文件，指定分类
+// extractMdFilesFlat('./source-folder', './extracted-md-files')  // 提取 .md 文件并转换为 .mdx
+// extractMdFilesFlat('./docs', './all-docs', true, 'AI编码提效', ['README*', 'LICENSE*', '/^temp/'])  // 提取并覆盖同名文件，指定分类和黑名单
 /**
- * 递归提取文件夹中文件名包含中文的 .md 文件并扁平化存放到目标文件夹
+ * 递归提取文件夹中的 .md 文件并扁平化存放到目标文件夹
  * 同时添加 frontmatter 并转换为 .mdx 格式
  * @param {string} sourcePath - 源文件夹路径
  * @param {string} targetPath - 目标文件夹路径
  * @param {boolean} overwrite - 是否覆盖同名文件，默认为 false
  * @param {string} category - 可选的分类名称，默认为空
+ * @param {Array<string>} blacklist - 黑名单数组，支持通配符和正则表达式，默认为空数组
  */
 function extractMdFilesFlat(
   sourcePath,
   targetPath,
   overwrite = false,
-  category = ''
+  category = '',
+  blacklist = []
 ) {
   try {
     // 检查源路径是否存在
@@ -89,13 +91,34 @@ function extractMdFilesFlat(
       fs.mkdirSync(targetPath, { recursive: true })
       console.log(`已创建目标文件夹: ${targetPath}`)
     }
-
     // 用于记录已处理的文件名，避免重复
     const processedFiles = new Set()
     let totalCopied = 0
+    let sequenceNumber = 1
 
     // 获取今天的日期（YYYY-MM-DD 格式）
     const today = new Date().toISOString().split('T')[0]
+
+    // 黑名单匹配函数
+    function isInBlacklist(fileName) {
+      return blacklist.some((pattern) => {
+        try {
+          // 尝试作为正则表达式处理
+          if (pattern.startsWith('/') && pattern.endsWith('/')) {
+            const regexPattern = pattern.slice(1, -1)
+            const regex = new RegExp(regexPattern, 'i')
+            return regex.test(fileName)
+          }
+          // 处理通配符模式
+          const regexPattern = pattern.replace(/\*/g, '.*').replace(/\?/g, '.')
+          const regex = new RegExp(`^${regexPattern}$`, 'i')
+          return regex.test(fileName)
+        } catch (error) {
+          console.warn(`黑名单模式无效: ${pattern}`, error.message)
+          return false
+        }
+      })
+    }
 
     // 创建 frontmatter 的辅助函数
     function createFrontmatter(title, pubDate, category) {
@@ -115,6 +138,13 @@ ogImage: true`
     }
 
     function traverseDirectory(currentPath) {
+      // 检查当前目录是否包含 package.json 文件
+      const packageJsonPath = path.join(currentPath, 'package.json')
+      if (fs.existsSync(packageJsonPath)) {
+        console.log(`跳过包含 package.json 的目录: ${currentPath}`)
+        return
+      }
+
       const items = fs.readdirSync(currentPath)
 
       items.forEach((item) => {
@@ -128,23 +158,22 @@ ogImage: true`
           const ext = path.extname(item).toLowerCase()
 
           if (ext === '.md') {
-            // 检查文件名是否包含中文字符
+            // 检查文件名是否在黑名单中
             const nameWithoutExt = path.parse(item).name
-            const hasChinese = /[\u4e00-\u9fff]/.test(nameWithoutExt)
 
-            if (!hasChinese) {
-              console.log(`跳过非中文文件名: ${item}`)
+            if (isInBlacklist(nameWithoutExt) || isInBlacklist(item)) {
+              console.log(`跳过黑名单文件: ${item}`)
               return
             }
 
-            // 处理包含中文的 .md 文件
-            console.log(`发现中文 .md 文件: ${item}`)
-            let targetFileName = `${nameWithoutExt}.mdx`
+            // 处理 .md 文件
+            console.log(`发现 .md 文件: ${item}`)
+            let targetFileName = `${sequenceNumber}-${nameWithoutExt}.mdx`
             let counter = 1
 
             // 处理同名文件
             while (processedFiles.has(targetFileName)) {
-              targetFileName = `${nameWithoutExt}_${counter}.mdx`
+              targetFileName = `${sequenceNumber}-${nameWithoutExt}_${counter}.mdx`
               counter++
             }
 
@@ -169,19 +198,30 @@ ogImage: true`
               // 读取原文件内容
               const originalContent = fs.readFileSync(fullPath, 'utf8')
 
+              // 去除与文件名相同的第一个一级标题
+              let processedContent = originalContent
+              const firstH1Match = originalContent.match(/^#\s+(.+)$/m)
+              if (firstH1Match && firstH1Match[1].trim() === nameWithoutExt) {
+                // 找到匹配的一级标题，将其删除
+                processedContent = originalContent
+                  .replace(/^#\s+.+$/m, '')
+                  .trim()
+                console.log(`已删除重复的一级标题: ${firstH1Match[1]}`)
+              }
+
               // 检查是否已经有 frontmatter
-              const hasFrontmatter = originalContent.startsWith('---')
+              const hasFrontmatter = processedContent.startsWith('---')
 
               let newContent
               if (hasFrontmatter) {
                 // 如果已有 frontmatter，替换或更新
-                const frontmatterEndIndex = originalContent.indexOf('---', 3)
+                const frontmatterEndIndex = processedContent.indexOf('---', 3)
                 if (frontmatterEndIndex !== -1) {
-                  const existingFrontmatter = originalContent.substring(
+                  const existingFrontmatter = processedContent.substring(
                     0,
                     frontmatterEndIndex + 3
                   )
-                  const bodyContent = originalContent.substring(
+                  const bodyContent = processedContent.substring(
                     frontmatterEndIndex + 3
                   )
 
@@ -220,20 +260,20 @@ ogImage: true`
                   newContent =
                     createFrontmatter(nameWithoutExt, today, category) +
                     '\n' +
-                    originalContent
+                    processedContent
                 }
               } else {
                 // 没有 frontmatter，添加新的
                 newContent =
                   createFrontmatter(nameWithoutExt, today, category) +
                   '\n' +
-                  originalContent
+                  processedContent
               }
-
               // 写入新文件
               fs.writeFileSync(targetFilePath, newContent, 'utf8')
               processedFiles.add(targetFileName)
               totalCopied++
+              sequenceNumber++
               console.log(`已转换: ${fullPath} -> ${targetFilePath}`)
             } catch (error) {
               console.error(`处理文件失败: ${item}`, error.message)
@@ -245,6 +285,9 @@ ogImage: true`
 
     traverseDirectory(sourcePath)
     console.log(`\n提取完成！共转换了 ${totalCopied} 个 .md 文件为 .mdx 格式`)
+    console.log(
+      `使用的黑名单模式: ${blacklist.length > 0 ? blacklist.join(', ') : '无'}`
+    )
   } catch (error) {
     console.error(`提取过程中发生错误:`, error.message)
   }
