@@ -91,8 +91,8 @@ function extractMdFilesFlat(
       fs.mkdirSync(targetPath, { recursive: true })
       console.log(`已创建目标文件夹: ${targetPath}`)
     }
-    // 用于记录已处理的文件名，避免重复
-    const processedFiles = new Set()
+    // 用于记录已处理的文件名和对应的序号，避免重复
+    const processedFiles = new Map() // 存储 fileName -> sequenceNumber 的映射
     let totalCopied = 0
     let sequenceNumber = 1
 
@@ -167,18 +167,29 @@ ogImage: true`
               console.log(`跳过黑名单文件: ${item}`)
               return
             }
-
             // 处理 .md 文件
             console.log(`发现 .md 文件: ${item}`)
-            let targetFileName = `${sequenceNumber}-${nameWithoutExt}.mdx`
-            let counter = 1
 
-            // 处理同名文件
-            while (processedFiles.has(targetFileName)) {
-              targetFileName = `${sequenceNumber}-${nameWithoutExt}_${counter}.mdx`
-              counter++
+            // 检查是否已经处理过相同的文件名
+            let currentSequenceNumber = sequenceNumber
+            if (processedFiles.has(nameWithoutExt)) {
+              // 如果已存在相同文件名，使用之前的序号并删除旧文件
+              currentSequenceNumber = processedFiles.get(nameWithoutExt)
+              const oldFileName = `${currentSequenceNumber}-${nameWithoutExt}.mdx`
+              const oldFilePath = path.join(targetPath, oldFileName)
+
+              if (fs.existsSync(oldFilePath)) {
+                fs.unlinkSync(oldFilePath)
+                console.log(`删除重复文件: ${oldFileName}`)
+                totalCopied-- // 减少计数，因为删除了一个文件
+              }
+            } else {
+              // 新文件名，记录映射关系
+              processedFiles.set(nameWithoutExt, currentSequenceNumber)
+              sequenceNumber++
             }
 
+            const targetFileName = `${currentSequenceNumber}-${nameWithoutExt}.mdx`
             const targetFilePath = path.join(targetPath, targetFileName)
 
             // 如果源文件和目标文件扩展名相同且路径相同，跳过（避免无限循环）
@@ -273,9 +284,7 @@ ogImage: true`
               }
               // 写入新文件
               fs.writeFileSync(targetFilePath, newContent, 'utf8')
-              processedFiles.add(targetFileName)
               totalCopied++
-              sequenceNumber++
               console.log(`已转换: ${fullPath} -> ${targetFilePath}`)
             } catch (error) {
               console.error(`处理文件失败: ${item}`, error.message)
