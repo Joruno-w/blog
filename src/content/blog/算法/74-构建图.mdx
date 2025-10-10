@@ -1,0 +1,66 @@
+---
+title: 构建图
+description: 构建图
+pubDate: 2025-10-10
+toc: true
+ogImage: true
+category: 算法
+---
+
+```js
+/**
+ * 使用邻接表来存储图信息，支持有向图/无向图，支持边权
+ */
+class Graph {
+  /**
+   * isDirected - 是否为有向图，默认值为 false（无向图）
+   */
+  constructor(isDirected = false) {
+    this.isDirected = isDirected
+    // 通过 map 来存储所有顶点以及所有出边的信息，最终 map 所存储的信息大致如下
+    // Map {
+    // 	'A' => [{node: 'B', weight: 2},{node: 'C', weight: 1}],
+    //  'B' => [{node: 'C', weight: 3}],
+    //  'C' => [],
+    // }
+    this.adjacencyList = new Map()
+  }
+
+  // 接下来实现一些辅助方法
+
+  // 获取图中所有的顶点列表
+  getVertices() {
+    return [...this.adjacencyList.keys()]
+  }
+
+  // 获取图中所有的边
+  getEdges() {
+    let edges = [] // 这个数组就存储所有的边
+    for (let [vertex, neighbors] of this.adjacencyList) {
+      for (let { node } of neighbors) {
+        edges.push([vertex, node]) // 数组的每一项是 [起点，终点]
+      }
+    }
+    return edges
+  }
+
+  // 统计图中所有边的数量
+  edgeCount() {
+    let count = 0 // 计数器，对边进行计数
+    for (let [_, neighbors] of this.adjacencyList) {
+      count += neighbors.length
+    }
+
+    // 如果是无向图，每条边在两个顶点的邻接表中会出现两次，需要除以2
+    return this.isDirected ? count : count / 2
+  }
+
+  // 判断图中是否存在某一条边
+  // src - 起点
+  // dest - 终点
+  hasEdge(src, dest) {
+    if (!this.adjacencyList.has(src)) return false
+    return this.adjacencyList.get(src).some((nodeObj) => nodeObj.node === dest)
+  }
+}
+```

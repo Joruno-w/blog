@@ -296,11 +296,11 @@ ogImage: true`
 }
 const sourcePath = path.resolve(
   import.meta.dirname,
-  '../content/blog/ReactNative'
+  '../content/blog/算法/algorithm-master'
 )
-const targetPath = path.resolve(import.meta.dirname, '../content/blog/RN')
+const targetPath = path.resolve(import.meta.dirname, '../content/blog/算法')
 
-extractMdFilesFlat(sourcePath, targetPath, true, 'React Native', [
+extractMdFilesFlat(sourcePath, targetPath, true, '算法', [
   'README*',
   'LICENSE*',
   'CHANGELOG*',

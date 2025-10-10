@@ -1,0 +1,70 @@
+---
+title: 克鲁斯卡尔算法
+description: 克鲁斯卡尔算法
+pubDate: 2025-10-10
+toc: true
+ogImage: true
+category: 算法
+---
+
+克鲁斯卡尔算法，同样是一种求最小生成树的算法，和普里姆的加点不同，克鲁斯卡尔算法则是采用 **加边** 的形式。
+
+下面我们来图解克鲁斯卡尔算法的核心步骤，还是针对这张图：
+
+<img
+  src="https://xiejie-typora.oss-cn-chengdu.aliyuncs.com/2025-03-13-055149.png"
+  alt="image-20250313135149109"
+  style="zoom:40%;"
+/>
+
+（1）首先，各个顶点先各不联通。然后，选择一条边权值最低的边，加上去。
+
+<img
+  src="https://xiejie-typora.oss-cn-chengdu.aliyuncs.com/2025-03-13-084132.png"
+  alt="image-20250313164131612"
+  style="zoom:40%;"
+/>
+
+（2）接下来继续选择边权值最小的，添加上去
+
+<img
+  src="https://xiejie-typora.oss-cn-chengdu.aliyuncs.com/2025-03-13-084212.png"
+  alt="image-20250313164211942"
+  style="zoom:40%;"
+/>
+
+（3）接下来继续寻找最小边权值的边，这一次找到的是边权值为 6 的边，添加上去
+
+<img
+  src="https://xiejie-typora.oss-cn-chengdu.aliyuncs.com/2025-03-13-084320.png"
+  alt="image-20250313164320498"
+  style="zoom:40%;"
+/>
+
+（4）接下来边权值最小的就是 7 的边了。但是现在边权值为 7 的边有两条，添加哪一条呢？可以看到，顶点 A 和顶点 C 其实已经联通了，所以不需要在顶点 A 和 C 之间增加边，因此这里应该添加 D E 这条边
+
+<img
+  src="https://xiejie-typora.oss-cn-chengdu.aliyuncs.com/2025-03-13-084527.png"
+  alt="image-20250313164526751"
+  style="zoom:40%;"
+/>
+
+可以看到，利用克鲁斯卡尔算法来求最小生成树，得到的结果和普里姆是相同的。
+
+**课堂练习**
+
+利用克鲁斯卡尔算法求下面图的最小生成树
+
+<img
+  src="https://xiejie-typora.oss-cn-chengdu.aliyuncs.com/2025-03-13-081536.png"
+  alt="image-20250313161535241"
+  style="zoom:40%;"
+/>
+
+画出来的结果：
+
+<img
+  src="https://xiejie-typora.oss-cn-chengdu.aliyuncs.com/2025-03-13-081934.png"
+  alt="image-20250313161934288"
+  style="zoom:40%;"
+/>
