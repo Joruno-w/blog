@@ -26,7 +26,7 @@ category: React Native
 在 RN 中，内置组件整体可以分为三大类：
 
 - 核心组件
-- _Andriod_ 平台独有组件
+- _Android_ 平台独有组件
 - _iOS_ 平台独有组件
 
 其中核心组件的数量是最多的。核心组件有一个特点，就是全平台通用。根据最终编译的目标平台，核心组件会被编译为对应平台的组件。如下图：
@@ -49,11 +49,11 @@ category: React Native
 
 ## _Image_ 组件
 
-_Image_ 是一个图片展示组件，其作用类似于 _Andriod_ 的 _ImageView_ 或者 _iOS_ 的 _UIImageView_。_Image_ 组件支持多种类型的图片显示，包括网络图片、静态资源、_base64_ 图片格式。
+_Image_ 是一个图片展示组件，其作用类似于 _Android_ 的 _ImageView_ 或者 _iOS_ 的 _UIImageView_。_Image_ 组件支持多种类型的图片显示，包括网络图片、静态资源、_base64_ 图片格式。
 
 要使用 _Image_ 组件加载图片，只需要设置 _source_ 属性即可，如果加载的是网络图片，还需要添加 _uri_ 标识以及手动指定图像的尺寸。
 
-目前，_Image_ 组件支持的图片格式有 _PNG、JPG、JPEG、BMP、GIF、WebP_ 以及 _PSD_。不过，在默认情况下 _Andriod_ 是不支持 _GIF_ 和 _WebP_ 格式图片的，如果需要添加这两种图片格式的支持，需要在 _android/app/build.gradle_ 文件中添加以下的依赖：
+目前，_Image_ 组件支持的图片格式有 _PNG、JPG、JPEG、BMP、GIF、WebP_ 以及 _PSD_。不过，在默认情况下 _Android_ 是不支持 _GIF_ 和 _WebP_ 格式图片的，如果需要添加这两种图片格式的支持，需要在 _android/app/build.gradle_ 文件中添加以下的依赖：
 
 ```js
 dependencies {
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
 export default UselessTextInput
 ```
 
-需要注意的是，_TextInput_ 在 _Andriod_ 中默认有一个底边框且存在内边距。如果想让它看起来和 _iOS_ 上的效果尽量一致，则需要将 _padding_ 的值设置为 _0_。
+需要注意的是，_TextInput_ 在 _Android_ 中默认有一个底边框且存在内边距。如果想让它看起来和 _iOS_ 上的效果尽量一致，则需要将 _padding_ 的值设置为 _0_。
 
 _API_ 文档地址：*https://reactnative.dev/docs/textinput*
 
