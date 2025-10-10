@@ -159,7 +159,9 @@ ogImage: true`
 
           if (ext === '.md') {
             // 检查文件名是否在黑名单中
-            const nameWithoutExt = path.parse(item).name
+            const nameWithoutExt = path
+              .parse(item)
+              .name.replace(/\d+(\.|-)?\s*/g, '')
 
             if (isInBlacklist(nameWithoutExt) || isInBlacklist(item)) {
               console.log(`跳过黑名单文件: ${item}`)
@@ -292,5 +294,17 @@ ogImage: true`
     console.error(`提取过程中发生错误:`, error.message)
   }
 }
+const sourcePath = path.resolve(
+  import.meta.dirname,
+  '../content/blog/ReactNative'
+)
+const targetPath = path.resolve(import.meta.dirname, '../content/blog/RN')
+
+extractMdFilesFlat(sourcePath, targetPath, true, 'React Native', [
+  'README*',
+  'LICENSE*',
+  'CHANGELOG*',
+  '/^temp/',
+])
 
 export { renameFilesRecursively, extractMdFilesFlat }
