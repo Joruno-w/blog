@@ -3,11 +3,11 @@ import { extractMdFilesFlat } from './file.js'
 
 const sourcePath = path.resolve(
   import.meta.dirname,
-  '../content/blog/doc-collaboration-master'
+  '../content/blog/frontend-new-react-master'
 )
-const targetPath = path.resolve(import.meta.dirname, '../content/blog/文档协同')
+const targetPath = path.resolve(import.meta.dirname, '../content/blog/React')
 
-extractMdFilesFlat(sourcePath, targetPath, true, '文档协同', [
+extractMdFilesFlat(sourcePath, targetPath, true, 'React', [
   'README*',
   'LICENSE*',
   'CHANGELOG*',
