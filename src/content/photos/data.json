@@ -1,21 +1,5 @@
 [
   {
-    "id": "01",
-    "desc": "A snow-covered tree in the middle of the night"
-  },
-  {
-    "id": "02",
-    "desc": "White leaves"
-  },
-  {
-    "id": "category/01",
-    "desc": "White snow flakes"
-  },
-  {
-    "id": "category/02",
-    "desc": "White and brown bokeh lights"
-  },
-  {
     "id": "https://images.unsplash.com/photo-1522725539107-ed9cef5284d1",
     "desc": "Snow-covered pine tree during daytime"
   },
