@@ -179,7 +179,7 @@ function updateFrontmatter(content, title, today, category) {
 }
 
 /**
- * 处理单个 MD 文件
+ * 处理单个 Markdown 文件
  * @param {string} filePath - 文件路径
  * @param {string} fileName - 文件名
  * @param {string} targetPath - 目标路径
