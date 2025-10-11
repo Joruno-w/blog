@@ -390,17 +390,5 @@ function extractMdFilesFlat(
     console.error(`提取过程中发生错误:`, error.message)
   }
 }
-const sourcePath = path.resolve(
-  import.meta.dirname,
-  '../content/blog/算法/algorithm-master'
-)
-const targetPath = path.resolve(import.meta.dirname, '../content/blog/算法')
 
-extractMdFilesFlat(sourcePath, targetPath, true, '算法', [
-  'README*',
-  'LICENSE*',
-  'CHANGELOG*',
-  '/^temp/',
-])
-
-export { renameFilesRecursively, extractMdFilesFlat }
+export { extractMdFilesFlat, renameFilesRecursively }
