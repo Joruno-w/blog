@@ -12,6 +12,7 @@ import rehypeCallouts from 'rehype-callouts'
 import rehypeKatex from 'rehype-katex'
 import rehypeExternalLinks from 'rehype-external-links'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import rehypeMermaid from 'rehype-mermaid'
 
 import { UI, FEATURES } from '../src/config'
 
@@ -65,6 +66,13 @@ export const rehypePlugins: RehypePlugins = [
   [rehypeHeadingIds, { headingIdCompat: true }],
   // https://github.com/remarkjs/remark-math/tree/main/packages/rehype-katex
   rehypeKatex,
+  // https://github.com/remcohaszing/rehype-mermaid
+  [
+    rehypeMermaid,
+    {
+      strategy: 'img-svg',
+    },
+  ],
   // https://github.com/lin-stephanie/rehype-callouts
   [
     rehypeCallouts,

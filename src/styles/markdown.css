@@ -484,3 +484,22 @@ html:not(.dark) .img-dark {
 .external-link-cursor {
   cursor: var(--external-link-cursor);
 }
+/* mermaid diagrams */
+.prose .mermaid {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.prose .mermaid img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+html.dark .prose .mermaid img {
+  filter: brightness(0.9) contrast(1.1);
+}
