@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   stale:
-    if: github.repository == 'lin-stephanie/astro-antfustyle-theme'
+    if: github.repository == 'Joruno-w/blog'
     runs-on: ubuntu-latest
 
     steps:
