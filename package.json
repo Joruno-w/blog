@@ -18,7 +18,6 @@
     "toolbar:on": "astro preferences enable devToolbar",
     "toolbar:off": "astro preferences disable devToolbar",
     "prepare": "simple-git-hooks",
-    "postinstall": "npx playwright install --with-deps chromium",
     "postbuild": "pagefind --site dist && del-cli \"dist/pagefind/*ui*\""
   },
   "devDependencies": {
@@ -77,8 +76,7 @@
     "typescript-eslint": "^8.37.0",
     "unist-util-visit": "^5.0.0",
     "unocss": "66.3.3",
-    "viewerjs": "^1.11.7",
-    "playwright": "^1.56.0"
+    "viewerjs": "^1.11.7"
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged"

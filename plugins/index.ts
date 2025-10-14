@@ -70,7 +70,7 @@ export const rehypePlugins: RehypePlugins = [
   [
     rehypeMermaid,
     {
-      strategy: 'img-svg',
+      strategy: 'pre-mermaid',
     },
   ],
   // https://github.com/lin-stephanie/rehype-callouts
