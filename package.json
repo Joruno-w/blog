@@ -18,6 +18,7 @@
     "toolbar:on": "astro preferences enable devToolbar",
     "toolbar:off": "astro preferences disable devToolbar",
     "prepare": "simple-git-hooks",
+    "postinstall": "npx playwright install --with-deps chromium",
     "postbuild": "pagefind --site dist && del-cli \"dist/pagefind/*ui*\""
   },
   "devDependencies": {
