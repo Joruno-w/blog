@@ -3,9 +3,9 @@ import type { Site, Ui, Features } from './types'
 export const SITE: Site = {
   website: 'https://wangshengliang.cn/',
   base: '/',
-  title: 'Joruno Jobaāna',
-  description: "Joruno Jobaāna's blog",
-  author: 'Joruno Jobaāna',
+  title: 'wangshengliang',
+  description: "wangshengliang's blog",
+  author: 'wangshengliang',
   lang: 'zh-Hans',
   ogLocale: 'zh_CN',
   imageDomains: ['cdn.jsdelivr.net', '*.unsplash.com'],
@@ -13,6 +13,12 @@ export const SITE: Site = {
 
 export const UI: Ui = {
   internalNavs: [
+    {
+      path: '/',
+      title: 'Home',
+      displayMode: 'alwaysText',
+      text: 'Home',
+    },
     {
       path: '/blog',
       title: 'Blog',

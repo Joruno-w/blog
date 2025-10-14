@@ -3,11 +3,11 @@ import { extractMdFilesFlat } from './file.js'
 
 const sourcePath = path.resolve(
   import.meta.dirname,
-  '../content/blog/frontend-new-react-master'
+  '../content/blog/nuxt-master'
 )
-const targetPath = path.resolve(import.meta.dirname, '../content/blog/React')
+const targetPath = path.resolve(import.meta.dirname, '../content/blog/Nuxt')
 
-extractMdFilesFlat(sourcePath, targetPath, true, 'React', [
+extractMdFilesFlat(sourcePath, targetPath, true, 'Nuxt', [
   'README*',
   'LICENSE*',
   'CHANGELOG*',
