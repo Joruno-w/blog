@@ -212,7 +212,7 @@ function processMdFile(
     )
 
     // 生成目标文件路径
-    const targetFileName = `${sequenceNumber}-${fileName}.mdx`
+    const targetFileName = `${sequenceNumber}-${fileName.replace(/\d+\./g, '')}.mdx`
     const targetFilePath = path.join(targetPath, targetFileName)
 
     // 写入新文件
@@ -315,10 +315,30 @@ function extractMdFilesFlat(
           const ext = path.extname(item).toLowerCase()
 
           if (ext === '.md') {
-            // 检查文件名是否在黑名单中
-            const nameWithoutExt = path
-              .parse(item)
-              .name.replace(/\d+(\.|-)?\s*/g, '')
+            // 获取文件名（不含扩展名）
+            const originalFileName = path.parse(item).name
+
+            // 检查是否是特殊情况：当前目录/课件/课件.md
+            let nameWithoutExt = originalFileName.replace(/\d+(\.|-)?\s*/g, '')
+
+            // 获取当前文件的父目录名和祖父目录名
+            const parentDirName = path.basename(currentPath)
+            const grandParentDirName = path.basename(path.dirname(currentPath))
+
+            // 检测特殊模式：如果文件名是"课件"且父目录也是"课件"
+            if (nameWithoutExt === '课件' && parentDirName === '课件') {
+              nameWithoutExt = grandParentDirName
+              console.log(
+                `检测到特殊模式，使用祖父目录名: ${grandParentDirName}`
+              )
+            }
+            // 或者更通用的检测：如果文件名与父目录名相同
+            else if (nameWithoutExt === parentDirName) {
+              nameWithoutExt = grandParentDirName
+              console.log(
+                `文件名与目录名相同，使用上级目录名: ${grandParentDirName}`
+              )
+            }
 
             if (
               isInBlacklist(nameWithoutExt, blacklist) ||
@@ -328,7 +348,7 @@ function extractMdFilesFlat(
               return
             }
             // 处理 .md 文件
-            console.log(`发现 .md 文件: ${item}`)
+            console.log(`发现 .md 文件: ${item} -> 将命名为: ${nameWithoutExt}`)
             // 检查是否已经处理过相同的文件名
             let currentSequenceNumber = sequenceNumber
             const duplicateResult = handleDuplicateFile(

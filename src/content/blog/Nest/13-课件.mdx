@@ -1,0 +1,191 @@
+---
+title: mysql相关回顾
+description: mysql相关回顾
+pubDate: 2025-10-14
+toc: true
+ogImage: true
+category: Nest
+---
+
+总结下来，所有的数据表之间有三种关系：
+
+- 一对一
+- 一对多
+- 多对多
+
+## 一对一
+
+一对一就是，我只有你，你只有我。
+
+比如：
+
+- 用户与用户详情信息的关系。
+- 商品与商品详情信息的关系。
+
+即使是一对一也要明确**主从关系**，比如用户与用户详情的关系，用户是主，用户详情是从，因为没有用户哪里来的用户详情呢？再比如没有商品哪来的商品详情信息呢？
+
+比如下面的例子，用户和用户详情信息
+
+```sql
+CREATE TABLE user(
+	id INT UNSIGNED PRIMARY KEY auto_increment,
+	name CHAR(30) DEFAULT NULL
+);
+
+CREATE TABLE user_detail(
+	id INT UNSIGNED PRIMARY KEY auto_increment,
+	card_no VARCHAR(20) NOT NULL,
+	user_id INT UNSIGNED,
+	CONSTRAINT user_detail_person FOREIGN KEY (user_id) REFERENCES user(id)
+)
+```
+
+> 当然，还有一对一的处理是直接用两张表的主键对主键
+
+插入数据
+
+![image-20250201135235705](/img/nestjs-1760441099154-376-image-20250201135235705.png)
+
+![image-20250201135254824](/img/nestjs-1760441099155-544-image-20250201135254824.png)
+
+然后查询所有用户的姓名和对应的身份证号：
+
+```sql
+SELECT u.id, u.name, ud.card_no
+FROM user u LEFT JOIN user_detail ud
+ON u.id=ud.user_id;
+```
+
+![image-20250201135532618](/img/nestjs-1760441099156-599-image-20250201135532618.png)
+
+## 一对多
+
+一对多(多对一)，即主表的一个数据可以有多个从表的数据。
+比如：班级和学生，一个班级有多个学生，一个学生对应一个班级，主表是班级，从表是学生
+
+```sql
+CREATE TABLE class(
+	id INT UNSIGNED PRIMARY KEY auto_increment,
+	class_name VARCHAR(30) COMMENT '班级名'
+);
+
+CREATE TABLE student(
+	id INT UNSIGNED PRIMARY KEY auto_increment,
+	student_name CHAR(30) COMMENT '学生名',
+	class_id INT UNSIGNED DEFAULT NULL COMMENT '班级id',
+	CONSTRAINT student_class FOREIGN KEY (class_id) REFERENCES class(id)
+);
+
+-- 创建表的数据库名是students
+INSERT INTO `students`.`class` (`class_name`) VALUES ('一班');
+INSERT INTO `students`.`class` (`class_name`) VALUES ('二班');
+INSERT INTO `students`.`class` (`class_name`) VALUES ('三班');
+
+INSERT INTO `students`.`student` (`student_name`, `class_id`) VALUES ('张三', '1');
+INSERT INTO `students`.`student` (`student_name`, `class_id`) VALUES ('李四', '2');
+INSERT INTO `students`.`student` (`student_name`, `class_id`) VALUES ('王五', '3');
+INSERT INTO `students`.`student` (`student_name`, `class_id`) VALUES ('赵六', '1');
+INSERT INTO `students`.`student` (`student_name`, `class_id`) VALUES ('丽丽', '1');
+INSERT INTO `students`.`student` (`student_name`, `class_id`) VALUES ('李磊', '2');
+INSERT INTO `students`.`student` (`student_name`, `class_id`) VALUES ('韩梅梅', '3');
+```
+
+![image-20250201140625105](/img/nestjs-1760441099156-137-image-20250201140625105.png)
+
+![image-20250201140647014](/img/nestjs-1760441099156-687-image-20250201140647014.png)
+
+我们当然就可以查询哪些班级下有那些学生
+
+```sql
+SELECT c.id, c.class_name,s.student_name
+FROM class c INNER JOIN student s ON c.id=s.class_id
+```
+
+![image-20250201140849967](/img/nestjs-1760441099157-19-image-20250201140849967.png)
+
+当然，我们也能够实现统计：
+
+```sql
+SELECT c.id, c.class_name, COUNT(s.student_name) student_num
+FROM class c LEFT JOIN student s ON c.id=s.class_id
+GROUP BY c.id;
+```
+
+![image-20250201141021823](/img/nestjs-1760441099157-373-image-20250201141021823.png)
+
+## 多对多
+
+三种关系里，多对多是最复杂的。
+比如：一篇文章有可以有多种分类，一种分类可以有多篇文章。
+
+由于多对多的关系比较复杂，我们一般会添加一张**中间表**专门来记录他们的关系。
+
+```sql
+-- 分类表
+CREATE TABLE tag(
+	id INT UNSIGNED PRIMARY KEY auto_increment,
+	tag_name VARCHAR(50) NOT NULL
+);
+
+-- 文章表
+CREATE TABLE article(
+	id INT UNSIGNED PRIMARY KEY auto_increment,
+	title VARCHAR(100) NOT NULL
+);
+
+-- 分类文章中间表
+CREATE TABLE tag_article(
+	id INT UNSIGNED PRIMARY KEY auto_increment,
+	tag_id INT UNSIGNED DEFAULT NULL,
+	article_id INT UNSIGNED DEFAULT NULL,
+	FOREIGN KEY(tag_id) REFERENCES tag(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY(article_id) REFERENCES article(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	UNIQUE(tag_id,article_id)
+)
+
+-- 插入分类表数据
+INSERT INTO `students`.`tag` (`tag_name`) VALUES ('玄幻');
+INSERT INTO `students`.`tag` (`tag_name`) VALUES ('武侠');
+INSERT INTO `students`.`tag` (`tag_name`) VALUES ('科幻');
+INSERT INTO `students`.`tag` (`tag_name`) VALUES ('男频');
+INSERT INTO `students`.`tag` (`tag_name`) VALUES ('女频');
+INSERT INTO `students`.`tag` (`tag_name`) VALUES ('漫画');
+INSERT INTO `students`.`tag` (`tag_name`) VALUES ('军事');
+INSERT INTO `students`.`tag` (`tag_name`) VALUES ('历史');
+
+-- 插入文章数据
+INSERT INTO `students`.`article` (`title`) VALUES ('斗破苍穹');
+INSERT INTO `students`.`article` (`title`) VALUES ('大奉打更人');
+INSERT INTO `students`.`article` (`title`) VALUES ('九重紫');
+INSERT INTO `students`.`article` (`title`) VALUES ('回明');
+INSERT INTO `students`.`article` (`title`) VALUES ('斗罗大陆');
+INSERT INTO `students`.`article` (`title`) VALUES ('庆余年');
+INSERT INTO `students`.`article` (`title`) VALUES ('宸汐缘');
+
+-- 插入中间表数据
+INSERT INTO `students`.`tag_article` (`tag_id`, `article_id`) VALUES ('1', '1');
+INSERT INTO `students`.`tag_article` (`tag_id`, `article_id`) VALUES ('4', '1');
+INSERT INTO `students`.`tag_article` (`tag_id`, `article_id`) VALUES ('1', '2');
+INSERT INTO `students`.`tag_article` (`tag_id`, `article_id`) VALUES ('4', '2');
+INSERT INTO `students`.`tag_article` (`tag_id`, `article_id`) VALUES ('5', '3');
+INSERT INTO `students`.`tag_article` (`tag_id`, `article_id`) VALUES ('8', '3');
+INSERT INTO `students`.`tag_article` (`tag_id`, `article_id`) VALUES ('1', '5');
+INSERT INTO `students`.`tag_article` (`tag_id`, `article_id`) VALUES ('4', '5');
+INSERT INTO `students`.`tag_article` (`tag_id`, `article_id`) VALUES ('6', '5');
+
+```
+
+![image-20250201142259035](/img/nestjs-1760441099158-571-image-20250201142259035.png)
+
+![image-20250201142318123](/img/nestjs-1760441099159-316-image-20250201142318123.png)
+
+![image-20250201142340703](/img/nestjs-1760441099159-895-image-20250201142340703.png)
+
+```sql
+SELECT t.id tag_id, t.tag_name, a.title
+FROM tag_article ta
+INNER JOIN article a ON a.id=ta.article_id
+INNER JOIN tag t ON t.id=ta.tag_id
+```
+
+![image-20250201142940776](/img/nestjs-1760441099160-776-image-20250201142940776.png)

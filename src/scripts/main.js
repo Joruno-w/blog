@@ -3,11 +3,11 @@ import { extractMdFilesFlat } from './file.js'
 
 const sourcePath = path.resolve(
   import.meta.dirname,
-  '../content/blog/nuxt-master'
+  '../content/blog/nestjs-main'
 )
-const targetPath = path.resolve(import.meta.dirname, '../content/blog/Nuxt')
+const targetPath = path.resolve(import.meta.dirname, '../content/blog/Nest')
 
-extractMdFilesFlat(sourcePath, targetPath, true, 'Nuxt', [
+extractMdFilesFlat(sourcePath, targetPath, true, 'Nest', [
   'README*',
   'LICENSE*',
   'CHANGELOG*',
