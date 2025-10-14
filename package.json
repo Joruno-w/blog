@@ -63,6 +63,7 @@
     "rehype-callouts": "^2.1.2",
     "rehype-external-links": "^3.0.0",
     "rehype-katex": "^7.0.1",
+    "rehype-mermaid": "^3.0.0",
     "remark-directive": "^4.0.0",
     "remark-directive-sugar": "^1.1.2",
     "remark-imgattr": "^1.0.5",
@@ -75,7 +76,8 @@
     "typescript-eslint": "^8.37.0",
     "unist-util-visit": "^5.0.0",
     "unocss": "66.3.3",
-    "viewerjs": "^1.11.7"
+    "viewerjs": "^1.11.7",
+    "playwright": "^1.56.0"
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged"
@@ -97,8 +99,5 @@
   },
   "engines": {
     "node": "18.20.8 || ^20.9.0 || ^22.0.0"
-  },
-  "dependencies": {
-    "rehype-mermaid": "^3.0.0"
   }
 }
