@@ -21,13 +21,7 @@ category: Nuxt
 
 Cookie 的工作原理。
 
-```mermaid
-graph TD
-    A[用户浏览器] -->|发起HTTP请求| B[服务器]
-    B -->|响应中包含 Set-Cookie 头| C[用户浏览器]
-    C -->|浏览器保存 Cookie| D[本地 Cookie 存储]
-    D -->|后续请求自动附带 Cookie| B
-```
+![](https://raw.githubusercontent.com/Joruno-w/blog/main/img/20251014161507137.png)
 
 1. 浏览器向服务器发送请求
 2. 服务器进行响应，并且在响应头里面通过 Set-Cookie 来指示浏览器保存或者更新 Cookie

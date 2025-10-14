@@ -205,22 +205,7 @@ const docs = await splitter.createDocuments([text])
 
 **生成阶段**
 
-```mermaid
-graph LR
-    A[检索到的语义相关内容] --> B{构造Prompt}
-    C[用户Query] --> B
-    B --> D[调用LLM]
-    D --> E[生成回答]
-    E --> F[返回给用户]
-
-    classDef process fill:#f9f,stroke:#333;
-    classDef data fill:#bbf,stroke:#333;
-    classDef output fill:#9f9,stroke:#333;
-
-    class A,C data;
-    class B,D,E process;
-    class F output;
-```
+![](https://raw.githubusercontent.com/Joruno-w/blog/main/img/20251014161107622.png)
 
 构造出来的提示词大致如下：
 

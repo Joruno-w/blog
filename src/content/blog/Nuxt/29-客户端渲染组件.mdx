@@ -64,12 +64,7 @@ category: Nuxt
 
 传统的 SSR 应用中，服务器会生成完整的首屏页面，然后客户端拿到首屏的 html 后再做水合操作，将整个页面转为可以交互的实例。
 
-```mermaid
-graph LR
-  A[客户端请求页面] --> B[服务端渲染完整 HTML]
-  B --> C[客户端下载所有 JS]
-  C --> D[进行水合: 重建虚拟 DOM 并绑定事件]
-```
+![](https://raw.githubusercontent.com/Joruno-w/blog/main/img/20251014161328727.png)
 
 在这一过程中，从静态 html 转为 Vue 实例，涉及到生成虚拟 DOM以及响应式数据，这一过程是存在性能消耗的。
 

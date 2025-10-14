@@ -74,25 +74,7 @@ Yjs 本身不包含网络通信逻辑，而是通过插件方式提供以下通�
 
 整个数据流的流向如下图所示：
 
-```mermaid
-flowchart TD
-    A1[用户操作] --> A2[前端编辑器：ProseMirror、Tiptap、Slate、Monaco]
-    A2 --> B1[Yjs 核心：CRDT 数据结构]
-
-    B1 --> C1[通信模块：y-websocket、y-webrtc、y-redis]
-    C1 --> D1[其他协作者的 Yjs 实例]
-    D1 --> D2[其他用户的前端编辑器]
-
-    B1 <--> C2[本地存储模块：y-indexeddb]
-
-    style A1 fill:#d0f0c0
-    style A2 fill:#b0e0e6
-    style B1 fill:#87ceeb
-    style C1 fill:#d8bfd8
-    style C2 fill:#e6e6fa
-    style D1 fill:#87cefa
-    style D2 fill:#b0e0e6
-```
+![](https://raw.githubusercontent.com/Joruno-w/blog/main/img/20251014161549268.png)
 
 ## Yjs优点概览
 

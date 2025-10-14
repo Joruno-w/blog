@@ -84,14 +84,7 @@ Streamable HTTP 是 MCP 中 **用于 Web 环境** 的通信方式。
 - `callTool`
 - `listResources`
 
-```mermaid
-sequenceDiagram
-  participant Client
-  participant Server
-
-  Client->>Server: POST /mcp（initialize / callTool）
-  Server-->>Client: JSON一次性响应 或者 SSE 流响应
-```
+![](https://raw.githubusercontent.com/Joruno-w/blog/main/img/20251014160338733.png)
 
 服务端可返回：
 
@@ -103,14 +96,7 @@ sequenceDiagram
 - `notifications/resources/list_changed`
 - `notifications/tools/list_changed`
 
-```mermaid
-sequenceDiagram
-  participant Client
-  participant Server
-
-  Client->>Server: GET /mcp（建立 SSE）
-  Server-->>Client: 推送 notifications（如 list_changed）
-```
+![](https://raw.githubusercontent.com/Joruno-w/blog/main/img/20251014160041964.png)
 
 StreamableHTTP 使用场景
 

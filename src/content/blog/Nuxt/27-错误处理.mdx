@@ -118,15 +118,7 @@ NuxtErrorBoundary：这是一个处理**错误边界**的组件，将可能出�
 
 当前组件树结构如下：
 
-```mermaid
-graph TD
-    A[app.vue] --> B[pages]
-    B --> C[index.vue]
-    B --> D[about.vue]
-    C --> E[ChildCom1]
-    E --> F[ChildCom2]
-    F --> G[ChildCom3]
-```
+![](https://raw.githubusercontent.com/Joruno-w/blog/main/img/20251014161231642.png)
 
 ChildCom3有错误的话，会导致整个首页都崩溃，渲染不出来。这个时候可以使用错误边界组件，包裹可能出错的组件，从而不影响组件树上面的组件。
 

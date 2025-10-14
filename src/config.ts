@@ -8,7 +8,7 @@ export const SITE: Site = {
   author: 'wangshengliang',
   lang: 'zh-Hans',
   ogLocale: 'zh_CN',
-  imageDomains: ['cdn.jsdelivr.net', '*.unsplash.com'],
+  imageDomains: ['cdn.jsdelivr.net', '*.unsplash.com', 'github.com'],
 }
 
 export const UI: Ui = {
