@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   stale:
-    if: github.repository == 'Joruno-w/blog'
+    if: github.repository == 'wangshengliang-wsl/blog'
     runs-on: ubuntu-latest
 
     steps:

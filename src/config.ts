@@ -62,7 +62,7 @@ export const UI: Ui = {
   ],
   socialLinks: [
     {
-      link: 'https://github.com/Joruno-w',
+      link: 'https://github.com/wangshengliang-wsl',
       title: 'GitHub Profile',
       displayMode: 'alwaysIcon',
       icon: 'i-uil-github-alt',
@@ -166,7 +166,7 @@ export const FEATURES: Features = {
   giscus: [
     true,
     {
-      'data-repo': 'Joruno-w/blog',
+      'data-repo': 'wangshengliang-wsl/blog',
       'data-repo-id': 'R_kgDOP4yOiQ',
       'data-category': 'Announcements',
       'data-category-id': 'DIC_kwDOP4yOic4CwBgk',
