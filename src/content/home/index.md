@@ -15,6 +15,6 @@
 如果你也是个代码爱好者，或者有什么有趣的项目想聊聊，随时欢迎来找我：
 
 - 邮箱：wsl1710642275@gmail.com
-- GitHub：[https://github.com/Joruno-w](https://github.com/Joruno-w)
+- GitHub：[https://github.com/wangshengliang-wsl](https://github.com/wangshengliang-wsl)
 
 期待和你一起在代码的世界里探索更多可能！
